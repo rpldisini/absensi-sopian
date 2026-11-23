@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistem Absensi SMK Mulia Hati Insani</title>
+
+<style>
+:root{
+ --primary:#1b4332;
+ --primary-hover:#265943;
+ --accent:#2d6a4f;
+ --bg-grad:linear-gradient(135deg,#122d21 0%,#1f4d39 55%,#346e55 100%);
+ --surface:#ffffff;
+ --soft:#f2f7f4;
+ --border:#cfe0d6;
+ --text:#1e293b;
+ --muted:#5c6f65;
+ --danger:#dc2626;
+ --danger-hover:#b91c1c;
+ --success:#15803d;
+}
+
+*{box-sizing:border-box}
+
+body{
+ margin:0;
+ font-family:"Segoe UI",Roboto,Arial,sans-serif;
+ background:var(--bg-grad);
+ min-height:100vh;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ padding:18px;
+ color:var(--text);
+}
+
+/* LOGIN CARD */
+.login-box{
+ background:var(--surface);
+ width:100%;
+ max-width:410px;
+ padding:32px 28px;
+ border-radius:18px;
+ box-shadow:0 20px 45px rgba(0,0,0,0.25);
+}
+
+.logo{
+ text-align:center;
+ margin-bottom:24px;
+}
+
+.logo .icon{
+ width:64px;
+ height:64px;
+ line-height:64px;
+ margin:0 auto 12px;
+ border-radius:16px;
+ background:var(--soft);
+ font-size:34px;
+ box-shadow:inset 0 0 0 1px var(--border);
+}
+
+.logo h2{
+ font-size:20px;
+ margin:0 0 4px;
+ color:var(--primary);
+ letter-spacing:0.3px;
+}
+
+.logo p{
+ font-size:12px;
+ color:var(--muted);
+ margin:0;
+ font-weight:600;
+ letter-spacing:0.6px;
+}
+
+label{
+ display:block;
+ font-weight:600;
+ font-size:13px;
+ color:var(--text);
+ margin-bottom:6px;
+}
+
+input,select{
+ width:100%;
+ padding:11px 13px;
+ margin-bottom:15px;
+ border:1px solid #c5d6cc;
+ border-radius:9px;
+ font-size:14px;
+ background:#fff;
+ color:var(--text);
+ transition:border-color 0.2s,box-shadow 0.2s;
+}
+
+input:focus,select:focus{
+ outline:none;
+ border-color:var(--accent);
+ box-shadow:0 0 0 3px rgba(45,106,79,0.16);
+}
+
+button{
+ width:100%;
+ padding:12px 16px;
+ background:var(--primary);
+ color:#fff;
+ border:0;
+ border-radius:9px;
+ font-size:14px;
+ font-weight:600;
+ cursor:pointer;
+ transition:background 0.2s,transform 0.08s;
+}
+
+button:hover{background:var(--primary-hover)}
+button:active{transform:scale(0.99)}
+
+.error{
+ color:var(--danger);
+ text-align:center;
+ font-size:13px;
+ font-weight:500;
+ margin-top:12px;
+ min-height:18px;
+}
+
+.footer{
+ text-align:center;
+ font-size:12px;
+ color:var(--muted);
+ margin-top:22px;
+ padding-top:16px;
+ border-top:1px solid #e6efea;
+ line-height:1.5;
+}
+
+/* DASHBOARD */
+#dashboard{
+ display:none;
+ background:var(--surface);
+ width:100%;
+ max-width:900px;
+ padding:28px;
+ border-radius:18px;
+ box-shadow:0 20px 45px rgba(0,0,0,0.25);
+}
+
+.dash-header{
+ display:flex;
+ flex-wrap:wrap;
+ justify-content:space-between;
+ align-items:center;
+ gap:12px;
+ padding-bottom:18px;
+ border-bottom:1px solid var(--border);
+ margin-bottom:20px;
+}
+
+.dash-title h2{
+ margin:0;
+ font-size:21px;
+ color:var(--primary);
+}
+
+.dash-title p{
+ margin:4px 0 0;
+ font-size:13px;
+ color:var(--muted);
+}
+
+.role-badge{
+ display:inline-block;
+ background:#dfeee5;
+ color:var(--primary);
+ font-weight:700;
+ font-size:12px;
+ padding:4px 10px;
+ border-radius:999px;
+ margin-left:6px;
+}
+
+.header-actions{
+ display:flex;
+ gap:8px;
+ flex-wrap:wrap;
+}
+
+.btn-secondary{
+ width:auto;
+ background:#e2e8f0;
+ color:var(--text);
+}
+.btn-secondary:hover{background:#cbd5e1}
+
+.btn-export{
+ width:auto;
+ background:var(--accent);
+}
+.btn-export:hover{background:var(--primary)}
+
+.btn-logout{
+ width:auto;
+ background:var(--danger);
+}
+.btn-logout:hover{background:var(--danger-hover)}
+
+/* STATS */
+.stats{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:12px;
+ margin-bottom:22px;
+}
+
+@media(max-width:640px){
+ .stats{grid-template-columns:repeat(2,1fr)}
+}
+
+.stat-card{
+ padding:14px 16px;
+ border-radius:12px;
+ border:1px solid transparent;
+}
+
+.stat-card .label{
+ font-size:12px;
+ font-weight:700;
+ text-transform:uppercase;
+ letter-spacing:0.4px;
+}
+
+.stat-card .num{
+ font-size:24px;
+ font-weight:800;
+ margin-top:4px;
+}
+
+.st-hadir{background:#eaf6ee;border-color:#b7e0c5;color:#1b4332}
+.st-izin{background:#fefce8;border-color:#fef08a;color:#a16207}
+.st-sakit{background:#f0f9ff;border-color:#bae6fd;color:#0369a1}
+.st-alfa{background:#fef2f2;border-color:#fecaca;color:#b91c1c}
+
+/* FORM INPUT */
+.card-panel{
+ background:var(--soft);
+ border:1px solid var(--border);
+ padding:18px;
+ border-radius:12px;
+ margin-bottom:22px;
+}
+
+.card-panel h3{
+ margin:0 0 14px;
+ font-size:15px;
+ color:var(--primary);
+}
+
+.form-row{
+ display:grid;
+ grid-template-columns:2fr 1.2fr 1fr auto;
+ gap:12px;
+ align-items:end;
+}
+
+.form-row input,
+.form-row select{
+ margin-bottom:0;
+}
+
+.btn-add{
+ width:auto;
+ background:var(--accent);
+ padding:11px 18px;
+ white-space:nowrap;
+}
+.btn-add:hover{background:var(--primary)}
+
+@media(max-width:740px){
+ .form-row{grid-template-columns:1fr}
+ .btn-add{width:100%}
+}
+
+/* TOOLBAR TABEL */
+.toolbar{
+ display:flex;
+ flex-wrap:wrap;
+ justify-content:space-between;
+ align-items:center;
+ gap:10px;
+ margin-bottom:12px;
+}
+
+.toolbar-left{
+ display:flex;
+ flex-wrap:wrap;
+ gap:10px;
+ flex:1;
+}
+
+.toolbar input,.toolbar select{
+ width:auto;
+ min-width:170px;
+ margin-bottom:0;
+ padding:9px 12px;
+ font-size:13px;
+}
+
+@media(max-width:560px){
+ .toolbar input,.toolbar select{width:100%}
+}
+
+.btn-clear{
+ width:auto;
+ padding:9px 12px;
+ font-size:13px;
+ background:#fff;
+ color:var(--danger);
+ border:1px solid #fecaca;
+}
+.btn-clear:hover{background:#fef2f2}
+
+/* TABLE */
+.table-wrap{
+ overflow-x:auto;
+ border:1px solid var(--border);
+ border-radius:12px;
+}
+
+table{
+ width:100%;
+ border-collapse:collapse;
+ font-size:14px;
+ background:#fff;
+}
+
+th,td{
+ padding:11px 14px;
+ border-bottom:1px solid #e6efea;
+ text-align:left;
+}
+
+th{
+ background:var(--soft);
+ color:var(--primary);
+ font-size:12px;
+ text-transform:uppercase;
+ letter-spacing:0.4px;
+}
+
+tr:last-child td{border-bottom:0}
+tr:hover td{background:#f7fbf9}
+
+.badge{
+ display:inline-block;
+ padding:4px 10px;
+ border-radius:999px;
+ font-size:12px;
+ font-weight:700;
+}
+
+.Hadir{background:#dcfce7;color:#166534}
+.Izin{background:#fef9c3;color:#854d0e}
+.Sakit{background:#e0f2fe;color:#075985}
+.Alfa{background:#fee2e2;color:#991b1b}
+
+.btn-del{
+ width:auto;
+ padding:6px 10px;
+ font-size:12px;
+ background:#fee2e2;
+ color:#991b1b;
+ border-radius:7px;
+}
+.btn-del:hover{background:#fecaca}
+</style>
+</head>
+
+<body>
+
+<!-- HALAMAN LOGIN -->
+<div class="login-box" id="login">
+ <div class="logo">
+  <div class="icon">🎓</div>
+  <h2>SMK MULIA HATI INSANI</h2>
+  <p>SISTEM INFORMASI ABSENSI SISWA</p>
+ </div>
+
+ <form id="loginForm" onsubmit="loginUser(event)">
+  <label for="username">Username</label>
+  <input type="text" id="username" placeholder="Masukkan username (admin / guru)" required>
+
+  <label for="password">Password</label>
+  <input type="password" id="password" placeholder="Masukkan password (123)" required>
+
+  <label for="role">Login Sebagai</label>
+  <select id="role">
+   <option value="admin">Administrator</option>
+   <option value="guru">Guru</option>
+  </select>
+
+  <button type="submit">MASUK KE DASHBOARD</button>
+  <div class="error" id="error"></div>
+ </form>
+
+ <div class="footer">
+  © 2026 SMK MULIA HATI INSANI<br>
+  Semua Hak Dilindungi
+ </div>
+</div>
+
+<!-- DASHBOARD ABSENSI -->
+<div id="dashboard">
+ <div class="dash-header">
+  <div class="dash-title">
+   <h2>🎓 SMK MULIA HATI INSANI</h2>
+   <p>
+    <span id="welcomeText">Dashboard Absensi</span>
+    <span class="role-badge" id="roleBadge">-</span>
+   </p>
+  </div>
+  <div class="header-actions">
+   <button type="button" class="btn-export" onclick="exportCSV()">⬇ Export CSV</button>
+   <button type="button" class="btn-logout" onclick="logout()">Logout</button>
+  </div>
+ </div>
+
+ <div class="stats">
+  <div class="stat-card st-hadir">
+   <div class="label">Hadir</div>
+   <div class="num" id="countHadir">0</div>
+  </div>
+  <div class="stat-card st-izin">
+   <div class="label">Izin</div>
+   <div class="num" id="countIzin">0</div>
+  </div>
+  <div class="stat-card st-sakit">
+   <div class="label">Sakit</div>
+   <div class="num" id="countSakit">0</div>
+  </div>
+  <div class="stat-card st-alfa">
+   <div class="label">Alfa</div>
+   <div class="num" id="countAlfa">0</div>
+  </div>
+ </div>
+
+ <div class="card-panel">
+  <h3>📝 Input Absensi Siswa</h3>
+  <form id="absensiForm" onsubmit="tambahAbsensi(event)">
+   <div class="form-row">
+    <div>
+     <label for="namaSiswa">Nama Siswa</label>
+     <input type="text" id="namaSiswa" placeholder="Contoh: Siti Rahmawati" required>
+    </div>
+    <div>
+     <label for="kelasSiswa">Kelas</label>
+     <input type="text" id="kelasSiswa" placeholder="Contoh: XI TKJ 2" required>
+    </div>
+    <div>
+     <label for="statusSiswa">Status Kehadiran</label>
+     <select id="statusSiswa">
+      <option value="Hadir">Hadir</option>
+      <option value="Izin">Izin</option>
+      <option value="Sakit">Sakit</option>
+      <option value="Alfa">Alfa</option>
+     </select>
+    </div>
+    <button type="submit" class="btn-add">+ Simpan</button>
+   </div>
+  </form>
+ </div>
+
+ <div class="toolbar">
+  <div class="toolbar-left">
+   <input type="search" id="cariNama" placeholder="Cari nama siswa..." oninput="renderAbsensi()">
+   <select id="filterKelas" onchange="renderAbsensi()">
+    <option value="">Semua Kelas</option>
+   </select>
+  </div>
+  <button type="button" class="btn-clear" onclick="hapusSemuaData()">🗑 Hapus Semua</button>
+ </div>
+
+ <div class="table-wrap">
+  <table>
+   <thead>
+    <tr>
+     <th>No</th>
+     <th>Tanggal &amp; Jam</th>
+     <th>Nama Siswa</th>
+     <th>Kelas</th>
+     <th>Status</th>
+     <th>Aksi</th>
+    </tr>
+   </thead>
+   <tbody id="tabelAbsensi"></tbody>
+  </table>
+ </div>
+</div>
+
+<script>
+const AKUN_VALID = {
+ admin: { username: "admin", password: "123", label: "Administrator" },
+ guru:  { username: "guru",  password: "123", label: "Guru" }
+};
+
+const STORAGE_KEY = "absensi_smk_mhi_v2";
+
+window.addEventListener("DOMContentLoaded", () => {
+ if (sessionStorage.getItem("login") === "true") {
+  tampilDashboard();
+ }
+});
+
+function loginUser(event) {
+ event.preventDefault();
+
+ const username = document.getElementById("username").value.trim();
+ const password = document.getElementById("password").value;
+ const role = document.getElementById("role").value;
+ const errorEl = document.getElementById("error");
+
+ const akun = AKUN_VALID[role];
+ if (akun && username === akun.username && password === akun.password) {
+  errorEl.innerText = "";
+  sessionStorage.setItem("login", "true");
+  sessionStorage.setItem("role", role);
+  tampilDashboard();
+ } else {
+  errorEl.innerText = "Username, password, atau peran tidak sesuai!";
+ }
+}
+
+function tampilDashboard() {
+ const role = sessionStorage.getItem("role");
+ if (sessionStorage.getItem("login") !== "true" || !AKUN_VALID[role]) return;
+
+ document.getElementById("login").style.display = "none";
+ document.getElementById("dashboard").style.display = "block";
+ document.getElementById("welcomeText").innerText = "Selamat datang kembali";
+ document.getElementById("roleBadge").innerText = AKUN_VALID[role].label;
+
+ renderAbsensi();
+}
+
+function ambilData() {
+ try {
+  return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+ } catch {
+  return [];
+ }
+}
+
+function simpanData(data) {
+ localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function tambahAbsensi(event) {
+ event.preventDefault();
+
+ const nama = document.getElementById("namaSiswa").value.trim();
+ const kelas = document.getElementById("kelasSiswa").value.trim().toUpperCase();
+ const status = document.getElementById("statusSiswa").value;
+
+ if (!nama || !kelas) return;
+
+ const data = ambilData();
+ const waktu = new Date().toLocaleString("id-ID", {
+  dateStyle: "short",
+  timeStyle: "short"
+ });
+
+ data.unshift({
+  id: Date.now(),
+  waktu,
+  nama,
+  kelas,
+  status
+ });
+
+ simpanData(data);
+ document.getElementById("absensiForm").reset();
+ renderAbsensi();
+}
+
+function hapusItem(id) {
+ const data = ambilData().filter(item => item.id !== id);
+ simpanData(data);
+ renderAbsensi();
+}
+
+function hapusSemuaData() {
+ const data = ambilData();
+ if (data.length === 0) return;
+ if (confirm("Yakin ingin menghapus seluruh data absensi?")) {
+  localStorage.removeItem(STORAGE_KEY);
+  document.getElementById("filterKelas").value = "";
+  renderAbsensi();
+ }
+}
+
+function updateFilterKelas(data) {
+ const select = document.getElementById("filterKelas");
+ const current = select.value;
+ const daftarKelas = [...new Set(data.map(d => d.kelas))].sort();
+
+ select.innerHTML = `<option value="">Semua Kelas</option>` +
+  daftarKelas.map(k => `<option value="${escapeHtml(k)}">${escapeHtml(k)}</option>`).join("");
+
+ if (daftarKelas.includes(current)) {
+  select.value = current;
+ }
+}
+
+function renderAbsensi() {
+ const semuaData = ambilData();
+ updateFilterKelas(semuaData);
+
+ let hadir = 0, izin = 0, sakit = 0, alfa = 0;
+ semuaData.forEach(item => {
+  if (item.status === "Hadir") hadir++;
+  else if (item.status === "Izin") izin++;
+  else if (item.status === "Sakit") sakit++;
+  else if (item.status === "Alfa") alfa++;
+ });
+
+ document.getElementById("countHadir").innerText = hadir;
+ document.getElementById("countIzin").innerText = izin;
+ document.getElementById("countSakit").innerText = sakit;
+ document.getElementById("countAlfa").innerText = alfa;
+
+ const keyword = document.getElementById("cariNama").value.trim().toLowerCase();
+ const kelasFilter = document.getElementById("filterKelas").value;
+
+ const filtered = semuaData.filter(item => {
+  const cocokNama = !keyword || item.nama.toLowerCase().includes(keyword);
+  const cocokKelas = !kelasFilter || item.kelas === kelasFilter;
+  return cocokNama && cocokKelas;
+ });
+
+ const tbody = document.getElementById("tabelAbsensi");
+ if (filtered.length === 0) {
+  tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:#5c6f65;padding:24px;">Tidak ada data absensi yang cocok.</td></tr>`;
+  return;
+ }
+
+ tbody.innerHTML = filtered.map((item, idx) => `
+  <tr>
+   <td>${idx + 1}</td>
+   <td>${escapeHtml(item.waktu)}</td>
+   <td><strong>${escapeHtml(item.nama)}</strong></td>
+   <td>${escapeHtml(item.kelas)}</td>
+   <td><span class="badge ${item.status}">${item.status}</span></td>
+   <td><button type="button" class="btn-del" onclick="hapusItem(${item.id})">Hapus</button></td>
+  </tr>
+ `).join("");
+}
+
+function exportCSV() {
+ const data = ambilData();
+ if (data.length === 0) {
+  alert("Belum ada data untuk di-export.");
+  return;
+ }
+
+ const header = ["No", "Tanggal & Jam", "Nama Siswa", "Kelas", "Status"];
+ const rows = data.map((d, i) => [
+  i + 1,
+  `"${d.waktu.replace(/"/g, '""')}"`,
+  `"${d.nama.replace(/"/g, '""')}"`,
+  `"${d.kelas.replace(/"/g, '""')}"`,
+  `"${d.status.replace(/"/g, '""')}"`
+ ]);
+
+ const csvContent = "\uFEFF" + [header.join(","), ...rows.map(r => r.join(","))].join("\n");
+ const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+ const url = URL.createObjectURL(blob);
+
+ const a = document.createElement("a");
+ a.href = url;
+ a.download = `absensi-smk-mhi-${new Date().toISOString().slice(0,10)}.csv`;
+ a.click();
+ URL.revokeObjectURL(url);
+}
+
+function escapeHtml(text) {
+ return String(text)
+  .replace(/&/g, "&amp;")
+  .replace(/</g, "&lt;")
+  .replace(/>/g, "&gt;")
+  .replace(/"/g, "&quot;");
+}
+
+function logout() {
+ sessionStorage.clear();
+ document.getElementById("loginForm").reset();
+ document.getElementById("error").innerText = "";
+ document.getElementById("dashboard").style.display = "none";
+ document.getElementById("login").style.display = "block";
+}
+</script>
+
+</body>
+</html>
